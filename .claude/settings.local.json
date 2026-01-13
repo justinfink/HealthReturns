@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir \"c:\\\\Users\\\\darks\\\\HealthReturns\" /s /b)",
+      "Bash(npm run build:*)",
+      "Bash(grep:*)"
+    ]
+  }
+}

@@ -1,0 +1,441 @@
+// HealthReturns Database Schema
+// Biomarker-driven wellness incentive platform
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ==========================================
+// ORGANIZATION / EMPLOYER
+// ==========================================
+
+model Organization {
+  id                  String   @id @default(cuid())
+  clerkOrganizationId String   @unique
+  name                String
+  slug                String   @unique
+
+  // Company details
+  industry String?
+  size     CompanySize @default(SMALL)
+
+  // Program configuration
+  programConfig ProgramConfig?
+
+  // Relationships
+  members    Member[]
+  levelRules LevelRule[]
+
+  // Demo mode
+  isDemo Boolean @default(false)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([clerkOrganizationId])
+  @@index([slug])
+}
+
+enum CompanySize {
+  SMALL // <50 employees
+  MEDIUM // 50-250 employees
+  LARGE // 250-1000 employees
+  ENTERPRISE // 1000+ employees
+}
+
+model ProgramConfig {
+  id             String       @id @default(cuid())
+  organizationId String       @unique
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  // Program settings
+  programName      String    @default("Wellness Rewards")
+  programStartDate DateTime
+  programEndDate   DateTime?
+
+  // Rebate configuration
+  baselinePeriodDays   Int @default(30)
+  evaluationPeriodDays Int @default(90)
+
+  // Rebate percentages by level
+  level0Rebate Decimal @default(0) @db.Decimal(5, 2)
+  level1Rebate Decimal @default(5) @db.Decimal(5, 2)
+  level2Rebate Decimal @default(15) @db.Decimal(5, 2)
+  level3Rebate Decimal @default(30) @db.Decimal(5, 2)
+
+  // Alternative standards (ACA compliance)
+  alternativeStandardsEnabled     Boolean @default(true)
+  alternativeStandardsDescription String?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ==========================================
+// MEMBER / EMPLOYEE
+// ==========================================
+
+model Member {
+  id             String       @id @default(cuid())
+  clerkUserId    String       @unique
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  // Profile (synced from Clerk)
+  email      String
+  firstName  String?
+  lastName   String?
+  employeeId String? // External employee ID
+
+  // Program status
+  enrolledAt     DateTime?
+  currentLevel   MemberLevel @default(LEVEL_0)
+  levelUpdatedAt DateTime?
+
+  // Relationships
+  metrics      BiometricMetric[]
+  baselines    BaselineSnapshot[]
+  consents     ConsentRecord[]
+  integrations IntegrationConnection[]
+  levelHistory LevelHistory[]
+  rebates      RebateRecord[]
+
+  // Demo mode
+  isDemo Boolean @default(false)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([clerkUserId])
+  @@index([organizationId])
+  @@index([email])
+}
+
+enum MemberLevel {
+  LEVEL_0 // Enrolled (0% rebate)
+  LEVEL_1 // Participation + baseline (~5% rebate)
+  LEVEL_2 // Improvement OR maintenance (~15% rebate)
+  LEVEL_3 // Sustained improvement OR excellence (~25-30% rebate)
+}
+
+// ==========================================
+// BIOMETRIC METRICS
+// ==========================================
+
+model BiometricMetric {
+  id       String @id @default(cuid())
+  memberId String
+  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  // Metric details
+  category   MetricCategory
+  metricType MetricType
+  value      Decimal        @db.Decimal(10, 4)
+  unit       String
+
+  // Source information
+  source         IntegrationSource
+  sourceRecordId String? // ID from source system
+
+  // Timing
+  recordedAt DateTime
+  syncedAt   DateTime @default(now())
+
+  // Quality indicators
+  isVerified Boolean  @default(false)
+  confidence Decimal? @db.Decimal(3, 2) // 0.00 - 1.00
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([memberId])
+  @@index([memberId, category])
+  @@index([memberId, metricType, recordedAt])
+  @@index([recordedAt])
+}
+
+enum MetricCategory {
+  ACTIVITY // Steps, distance, active minutes
+  HEART // Heart rate, HRV, blood pressure, VO2 max
+  HEART_RATE // Resting HR, HRV (legacy)
+  SLEEP // Duration, quality, stages
+  BODY // Weight, BMI, body fat, muscle mass
+  BODY_COMPOSITION // Weight, BMI, body fat (legacy)
+  BLOOD_PRESSURE // Systolic, diastolic (legacy)
+  LABS // Blood glucose, cholesterol, etc.
+}
+
+enum MetricType {
+  // Activity
+  STEPS
+  DISTANCE
+  ACTIVE_MINUTES
+  CALORIES_BURNED
+  FLOORS_CLIMBED
+
+  // Heart Rate
+  RESTING_HEART_RATE
+  HEART_RATE_VARIABILITY
+  MAX_HEART_RATE
+  VO2_MAX
+  BLOOD_PRESSURE_SYSTOLIC
+  BLOOD_PRESSURE_DIASTOLIC
+
+  // Sleep
+  SLEEP_DURATION
+  SLEEP_SCORE
+  DEEP_SLEEP_MINUTES
+  REM_SLEEP_MINUTES
+  LIGHT_SLEEP_MINUTES
+  AWAKE_MINUTES
+
+  // Body Composition
+  WEIGHT
+  BMI
+  BODY_FAT_PERCENTAGE
+  MUSCLE_MASS
+  BONE_MASS
+  WATER_PERCENTAGE
+  VISCERAL_FAT
+  METABOLIC_AGE
+
+  // Blood Pressure (legacy)
+  SYSTOLIC_BP
+  DIASTOLIC_BP
+
+  // Labs
+  FASTING_GLUCOSE
+  HBA1C
+  TOTAL_CHOLESTEROL
+  LDL_CHOLESTEROL
+  HDL_CHOLESTEROL
+  TRIGLYCERIDES
+  HS_CRP
+  VITAMIN_D
+  APO_B
+  FASTING_INSULIN
+  HOMA_IR
+}
+
+enum IntegrationSource {
+  GARMIN
+  APPLE_HEALTH
+  RENPHO
+  FUNCTION_HEALTH
+  MANUAL_ENTRY
+}
+
+// ==========================================
+// BASELINES
+// ==========================================
+
+model BaselineSnapshot {
+  id       String @id @default(cuid())
+  memberId String
+  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  // Baseline period
+  periodStart DateTime
+  periodEnd   DateTime
+
+  // Baseline status
+  status BaselineStatus @default(COLLECTING)
+
+  // Aggregated baseline values (JSON for flexibility)
+  // Format: { metricType: { avg, min, max, count } }
+  metrics Json
+
+  // Timestamps
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  finalizedAt DateTime?
+
+  @@index([memberId])
+  @@index([memberId, status])
+}
+
+enum BaselineStatus {
+  COLLECTING // Still gathering data
+  COMPLETE // Baseline finalized
+  INSUFFICIENT // Not enough data
+}
+
+// ==========================================
+// LEVEL RULES
+// ==========================================
+
+model LevelRule {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  // Rule details
+  targetLevel MemberLevel
+  metricType  MetricType
+
+  // Thresholds
+  improvementThreshold Decimal? @db.Decimal(10, 4) // % improvement from baseline
+  absoluteThreshold    Decimal? @db.Decimal(10, 4) // Absolute value to achieve
+  maintenanceAllowed   Boolean  @default(true) // Can maintain instead of improve
+
+  // Rule logic
+  comparisonType ComparisonType @default(GREATER_THAN)
+  weight         Decimal        @default(1) @db.Decimal(3, 2) // Importance weight
+
+  // Status
+  isActive Boolean @default(true)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([organizationId])
+  @@index([organizationId, targetLevel])
+}
+
+enum ComparisonType {
+  GREATER_THAN
+  LESS_THAN
+  GREATER_THAN_OR_EQUAL
+  LESS_THAN_OR_EQUAL
+  WITHIN_RANGE
+}
+
+// ==========================================
+// LEVEL HISTORY & REBATES
+// ==========================================
+
+model LevelHistory {
+  id       String @id @default(cuid())
+  memberId String
+  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  previousLevel MemberLevel
+  newLevel      MemberLevel
+  reason        String?
+
+  // Evaluation details
+  evaluationData Json? // Metrics used for evaluation
+
+  // Timestamps
+  changedAt DateTime @default(now())
+
+  @@index([memberId])
+  @@index([memberId, changedAt])
+}
+
+model RebateRecord {
+  id       String @id @default(cuid())
+  memberId String
+  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  // Rebate details
+  level            MemberLevel
+  rebatePercentage Decimal     @db.Decimal(5, 2)
+  periodStart      DateTime
+  periodEnd        DateTime
+
+  // Status
+  status RebateStatus @default(PENDING)
+
+  // Timestamps
+  createdAt   DateTime  @default(now())
+  processedAt DateTime?
+
+  @@index([memberId])
+  @@index([status])
+}
+
+enum RebateStatus {
+  PENDING
+  APPROVED
+  DISBURSED
+  CANCELLED
+}
+
+// ==========================================
+// CONSENT MANAGEMENT
+// ==========================================
+
+model ConsentRecord {
+  id       String @id @default(cuid())
+  memberId String
+  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  // Consent details
+  consentType ConsentType
+  version     String      @default("1.0")
+
+  // Consent status
+  granted   Boolean
+  grantedAt DateTime?
+  revokedAt DateTime?
+
+  // Audit trail
+  ipAddress String?
+  userAgent String?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([memberId])
+  @@index([memberId, consentType])
+}
+
+enum ConsentType {
+  PROGRAM_PARTICIPATION // Consent to participate in wellness program
+  DATA_COLLECTION // Consent to collect health data
+  DATA_SHARING_AGGREGATE // Consent to share aggregate data with employer
+  MARKETING_COMMUNICATIONS // Consent for marketing emails
+}
+
+// ==========================================
+// INTEGRATION CONNECTIONS
+// ==========================================
+
+model IntegrationConnection {
+  id       String @id @default(cuid())
+  memberId String
+  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  // Integration details
+  source IntegrationSource
+  status ConnectionStatus  @default(PENDING)
+
+  // OAuth tokens (encrypted in production)
+  accessToken    String?   @db.Text
+  refreshToken   String?   @db.Text
+  tokenExpiresAt DateTime?
+
+  // Sync status
+  lastSyncAt     DateTime?
+  lastSyncStatus String?
+
+  // Timestamps
+  connectedAt    DateTime?
+  disconnectedAt DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@unique([memberId, source])
+  @@index([memberId])
+}
+
+enum ConnectionStatus {
+  PENDING
+  CONNECTED
+  ACTIVE
+  ERROR
+  DISCONNECTED
+}
