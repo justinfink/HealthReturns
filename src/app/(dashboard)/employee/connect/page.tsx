@@ -1,28 +1,39 @@
 "use client"
 
+import { useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { DashboardHeader } from "@/components/layout/dashboard-header"
 import { IntegrationCard } from "@/components/dashboard/integration-card"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Lock, Shield } from "lucide-react"
+import { Lock, Shield, CheckCircle2, XCircle } from "lucide-react"
+import { useToast } from "@/hooks/use-toast"
 
-// Demo integration data
+// Integration data with source identifiers
 const integrations = [
   {
     name: "Garmin Connect",
     icon: "⌚",
     description: "Sync activity, heart rate, and sleep data from Garmin devices.",
-    status: "CONNECTED" as const,
-    lastSync: "5 min ago",
+    status: "DISCONNECTED" as const,
     isMock: false,
+    source: "garmin",
+  },
+  {
+    name: "Strava",
+    icon: "🏃",
+    description: "Sync running, cycling, and workout data from Strava.",
+    status: "DISCONNECTED" as const,
+    isMock: false,
+    source: "strava",
   },
   {
     name: "Apple Health",
     icon: "🍎",
     description: "Import health data from your iPhone and Apple Watch.",
-    status: "CONNECTED" as const,
-    lastSync: "1 hour ago",
+    status: "DISCONNECTED" as const,
     isMock: true,
+    source: "apple",
   },
   {
     name: "Renpho",
@@ -30,6 +41,7 @@ const integrations = [
     description: "Track weight and body composition from Renpho smart scales.",
     status: "DISCONNECTED" as const,
     isMock: true,
+    source: "renpho",
   },
   {
     name: "Function Health",
@@ -37,6 +49,7 @@ const integrations = [
     description: "Connect lab results and biomarkers from Function Health tests.",
     status: "DISCONNECTED" as const,
     isMock: true,
+    source: "function",
   },
 ]
 
@@ -51,6 +64,17 @@ const metricsBySource = [
       "Heart Rate Variability",
       "Sleep Duration",
       "Sleep Stages",
+    ],
+  },
+  {
+    source: "Strava",
+    metrics: [
+      "Distance",
+      "Active Minutes",
+      "Calories Burned",
+      "Average Heart Rate",
+      "Max Heart Rate",
+      "Elevation Gain",
     ],
   },
   {
@@ -81,6 +105,146 @@ const metricsBySource = [
 ]
 
 export default function ConnectPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const { toast } = useToast()
+  const [connecting, setConnecting] = useState<string | null>(null)
+
+  // Check for success/error query params from OAuth callbacks
+  const connected = searchParams.get("connected")
+  const error = searchParams.get("error")
+
+  // Show toast based on URL params
+  if (connected) {
+    toast({
+      title: "Connected successfully!",
+      description: `Your ${connected} account has been connected.`,
+    })
+    // Clear the query param
+    router.replace("/employee/connect")
+  }
+
+  if (error) {
+    const errorMessages: Record<string, string> = {
+      denied: "You denied access to the integration.",
+      strava_denied: "You denied access to Strava.",
+      session_expired: "Your session expired. Please try again.",
+      callback_failed: "Failed to complete connection. Please try again.",
+      missing_code: "Missing authorization code.",
+      missing_params: "Missing required parameters.",
+      token_mismatch: "Token mismatch. Please try again.",
+    }
+    toast({
+      title: "Connection failed",
+      description: errorMessages[error] || "An error occurred. Please try again.",
+      variant: "destructive",
+    })
+    router.replace("/employee/connect")
+  }
+
+  const handleConnect = async (source: string) => {
+    if (source === "strava") {
+      setConnecting("strava")
+      try {
+        const response = await fetch("/api/integrations/strava/auth", {
+          method: "POST",
+        })
+        const data = await response.json()
+
+        if (data.authorizationUrl) {
+          window.location.href = data.authorizationUrl
+        } else {
+          toast({
+            title: "Connection failed",
+            description: data.error || "Failed to initiate Strava connection",
+            variant: "destructive",
+          })
+        }
+      } catch (err) {
+        toast({
+          title: "Connection failed",
+          description: "Failed to connect to Strava. Please try again.",
+          variant: "destructive",
+        })
+      } finally {
+        setConnecting(null)
+      }
+    } else if (source === "garmin") {
+      setConnecting("garmin")
+      try {
+        const response = await fetch("/api/integrations/garmin/auth", {
+          method: "POST",
+        })
+        const data = await response.json()
+
+        if (data.authorizationUrl) {
+          window.location.href = data.authorizationUrl
+        } else {
+          toast({
+            title: "Connection failed",
+            description: data.error || "Failed to initiate Garmin connection",
+            variant: "destructive",
+          })
+        }
+      } catch (err) {
+        toast({
+          title: "Connection failed",
+          description: "Failed to connect to Garmin. Please try again.",
+          variant: "destructive",
+        })
+      } finally {
+        setConnecting(null)
+      }
+    } else {
+      // Mock integrations
+      toast({
+        title: "Coming soon",
+        description: `${source} integration is coming soon!`,
+      })
+    }
+  }
+
+  const handleDisconnect = async (source: string) => {
+    if (source === "strava") {
+      try {
+        await fetch("/api/integrations/strava/auth", { method: "DELETE" })
+        toast({
+          title: "Disconnected",
+          description: "Your Strava account has been disconnected.",
+        })
+        router.refresh()
+      } catch (err) {
+        toast({
+          title: "Error",
+          description: "Failed to disconnect Strava.",
+          variant: "destructive",
+        })
+      }
+    } else if (source === "garmin") {
+      try {
+        await fetch("/api/integrations/garmin/auth", { method: "DELETE" })
+        toast({
+          title: "Disconnected",
+          description: "Your Garmin account has been disconnected.",
+        })
+        router.refresh()
+      } catch (err) {
+        toast({
+          title: "Error",
+          description: "Failed to disconnect Garmin.",
+          variant: "destructive",
+        })
+      }
+    }
+  }
+
+  const handleSync = async (source: string) => {
+    toast({
+      title: "Syncing",
+      description: `Syncing data from ${source}...`,
+    })
+  }
+
   return (
     <div className="flex flex-col">
       <DashboardHeader
@@ -98,11 +262,9 @@ export default function ConnectPage() {
                 <IntegrationCard
                   key={integration.name}
                   {...integration}
-                  onConnect={() => console.log(`Connect ${integration.name}`)}
-                  onDisconnect={() =>
-                    console.log(`Disconnect ${integration.name}`)
-                  }
-                  onSync={() => console.log(`Sync ${integration.name}`)}
+                  onConnect={() => handleConnect(integration.source)}
+                  onDisconnect={() => handleDisconnect(integration.source)}
+                  onSync={() => handleSync(integration.source)}
                 />
               ))}
             </div>

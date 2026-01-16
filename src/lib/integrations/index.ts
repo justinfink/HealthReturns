@@ -11,6 +11,13 @@ export {
   decryptToken,
 } from "./garmin/oauth"
 
+export { StravaClient, getStravaClient, transformStravaActivityToMetrics } from "./strava/client"
+export {
+  getAuthorizationUrl as getStravaAuthorizationUrl,
+  exchangeCodeForToken as exchangeStravaCodeForToken,
+  storeStravaConnection,
+} from "./strava/oauth"
+
 export { AppleHealthMockClient } from "./apple-health/mock-client"
 export { RenphoMockClient } from "./renpho/mock-client"
 export { FunctionHealthMockClient } from "./function-health/mock-client"
@@ -32,6 +39,13 @@ export const integrationMetadata: Record<
     name: "Garmin Connect",
     description: "Sync steps, heart rate, sleep, and activity data from Garmin devices",
     icon: "garmin",
+    isReal: true,
+    requiresOAuth: true,
+  },
+  [IntegrationSource.STRAVA]: {
+    name: "Strava",
+    description: "Sync running, cycling, and workout data from Strava",
+    icon: "strava",
     isReal: true,
     requiresOAuth: true,
   },
@@ -75,6 +89,14 @@ export const integrationMetrics: Record<IntegrationSource, string[]> = {
     "sleep_duration",
     "sleep_score",
     "calories",
+  ],
+  [IntegrationSource.STRAVA]: [
+    "distance",
+    "active_minutes",
+    "calories_burned",
+    "average_heart_rate",
+    "max_heart_rate",
+    "elevation_gain",
   ],
   [IntegrationSource.APPLE_HEALTH]: [
     "steps",

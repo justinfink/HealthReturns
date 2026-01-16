@@ -229,6 +229,7 @@ enum MetricType {
 
 enum IntegrationSource {
   GARMIN
+  STRAVA
   APPLE_HEALTH
   RENPHO
   FUNCTION_HEALTH

@@ -3,7 +3,19 @@
     "allow": [
       "Bash(dir \"c:\\\\Users\\\\darks\\\\HealthReturns\" /s /b)",
       "Bash(npm run build:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(gh repo create:*)",
+      "Bash(git push:*)",
+      "Bash(vercel:*)",
+      "Bash(npx vercel --version)",
+      "Bash(supabase --version:*)",
+      "Bash(npx supabase:*)",
+      "Bash(xargs -I {} sh -c 'echo \"\"=== {} ===\"\" && head -5 {}')",
+      "Bash(npx @clerk/clerk-cli:*)",
+      "Bash(npx prisma db push:*)",
+      "Bash(printf 'postgresql://postgres.lavgxpkgslbgrkrgcofl:DonaldJDuck4547@aws-1-us-east-1.pooler.supabase.com:5432/postgres')",
+      "Bash(printf:*)",
+      "Bash(git add:*)"
     ]
   }
 }
