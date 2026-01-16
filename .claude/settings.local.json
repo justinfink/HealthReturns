@@ -14,7 +14,9 @@
       "Bash(npx @clerk/clerk-cli:*)",
       "Bash(npx prisma db push:*)",
       "Bash(printf:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(npx prisma studio)",
+      "Bash(npx prisma db pull:*)"
     ]
   }
 }

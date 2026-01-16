@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server"
-import { cookies } from "next/headers"
 import { exchangeCodeForToken, storeStravaConnection } from "@/lib/integrations/strava/oauth"
 
 // GET /api/integrations/strava/callback - Handle Strava OAuth callback
@@ -7,9 +6,16 @@ export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams
     const code = searchParams.get("code")
-    const state = searchParams.get("state")
+    const state = searchParams.get("state") // This contains the member ID
     const error = searchParams.get("error")
     const scope = searchParams.get("scope")
+
+    console.log("Strava callback received:", {
+      hasCode: !!code,
+      state,
+      error,
+      scope
+    })
 
     // Check for OAuth error
     if (error) {
@@ -20,34 +26,30 @@ export async function GET(request: NextRequest) {
     }
 
     if (!code) {
+      console.error("No authorization code received")
       return NextResponse.redirect(
         new URL("/employee/connect?error=missing_code", request.url)
       )
     }
 
-    // Get stored member ID from cookie
-    const cookieStore = await cookies()
-    const memberId = cookieStore.get("strava_member_id")?.value
+    // Get member ID from state parameter (more reliable than cookies for cross-domain OAuth)
+    const memberId = state
 
     if (!memberId) {
+      console.error("No member ID in state parameter")
       return NextResponse.redirect(
         new URL("/employee/connect?error=session_expired", request.url)
       )
     }
 
-    // Verify state matches member ID (if we used state)
-    if (state && state !== memberId) {
-      console.warn("State mismatch in Strava callback")
-    }
-
+    console.log("Exchanging code for token...")
     // Exchange code for access token
     const tokenResponse = await exchangeCodeForToken(code)
+    console.log("Token exchange successful, storing connection...")
 
     // Store the connection in database
     await storeStravaConnection(memberId, tokenResponse)
-
-    // Clear the temporary cookie
-    cookieStore.delete("strava_member_id")
+    console.log("Strava connection stored successfully")
 
     // Redirect to connect page with success
     return NextResponse.redirect(

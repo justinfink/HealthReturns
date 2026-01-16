@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth, currentUser } from "@clerk/nextjs/server"
 import { getAuthorizationUrl } from "@/lib/integrations/strava/oauth"
 import { prisma } from "@/lib/db/prisma"
-import { cookies } from "next/headers"
 import { ConsentType } from "@prisma/client"
 
 // POST /api/integrations/strava/auth - Initiate Strava OAuth flow
@@ -87,17 +86,8 @@ export async function POST(request: NextRequest) {
     const appUrl = origin?.startsWith("http") ? origin : `${protocol}://${origin}`
     const callbackUrl = `${appUrl}/api/integrations/strava/callback`
 
-    // Store member ID in cookie for the callback
-    const cookieStore = await cookies()
-    cookieStore.set("strava_member_id", member.id, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 600, // 10 minutes
-      path: "/",
-    })
-
-    // Generate authorization URL
+    // Generate authorization URL with member ID as state parameter
+    // Using state parameter is more reliable than cookies for cross-domain OAuth
     const authorizationUrl = getAuthorizationUrl(callbackUrl, member.id)
 
     return NextResponse.json({
