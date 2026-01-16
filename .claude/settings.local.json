@@ -13,7 +13,6 @@
       "Bash(xargs -I {} sh -c 'echo \"\"=== {} ===\"\" && head -5 {}')",
       "Bash(npx @clerk/clerk-cli:*)",
       "Bash(npx prisma db push:*)",
-      "Bash(printf 'postgresql://postgres.lavgxpkgslbgrkrgcofl:DonaldJDuck4547@aws-1-us-east-1.pooler.supabase.com:5432/postgres')",
       "Bash(printf:*)",
       "Bash(git add:*)"
     ]
