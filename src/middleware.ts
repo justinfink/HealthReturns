@@ -11,6 +11,9 @@ const isPublicRoute = createRouteMatcher([
   "/sign-up(.*)",
   "/api/webhooks/(.*)",
   "/api/health",
+  // OAuth callback routes need to be public since they come from external redirects
+  "/api/integrations/strava/callback",
+  "/api/integrations/garmin/callback",
 ])
 
 // Admin routes that require org:admin role
