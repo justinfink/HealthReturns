@@ -86,9 +86,13 @@ export async function POST(request: NextRequest) {
     const appUrl = origin?.startsWith("http") ? origin : `${protocol}://${origin}`
     const callbackUrl = `${appUrl}/api/integrations/strava/callback`
 
+    console.log("Strava auth - member ID:", member.id)
+    console.log("Strava auth - callback URL:", callbackUrl)
+
     // Generate authorization URL with member ID as state parameter
     // Using state parameter is more reliable than cookies for cross-domain OAuth
     const authorizationUrl = getAuthorizationUrl(callbackUrl, member.id)
+    console.log("Strava auth - authorization URL generated")
 
     return NextResponse.json({
       authorizationUrl,

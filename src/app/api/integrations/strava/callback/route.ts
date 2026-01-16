@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { exchangeCodeForToken, storeStravaConnection } from "@/lib/integrations/strava/oauth"
+import { prisma } from "@/lib/db/prisma"
 
 // GET /api/integrations/strava/callback - Handle Strava OAuth callback
 export async function GET(request: NextRequest) {
@@ -14,7 +15,8 @@ export async function GET(request: NextRequest) {
       hasCode: !!code,
       state,
       error,
-      scope
+      scope,
+      url: request.url
     })
 
     // Check for OAuth error
@@ -42,12 +44,27 @@ export async function GET(request: NextRequest) {
       )
     }
 
+    // Verify member exists in database
+    console.log("Verifying member exists:", memberId)
+    const member = await prisma.member.findUnique({
+      where: { id: memberId }
+    })
+
+    if (!member) {
+      console.error("Member not found in database:", memberId)
+      return NextResponse.redirect(
+        new URL("/employee/connect?error=session_expired", request.url)
+      )
+    }
+    console.log("Member found:", member.email)
+
     console.log("Exchanging code for token...")
     // Exchange code for access token
     const tokenResponse = await exchangeCodeForToken(code)
-    console.log("Token exchange successful, storing connection...")
+    console.log("Token exchange successful, athlete:", tokenResponse.athlete?.firstname)
 
     // Store the connection in database
+    console.log("Storing connection for member:", memberId)
     await storeStravaConnection(memberId, tokenResponse)
     console.log("Strava connection stored successfully")
 
@@ -55,8 +72,13 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(
       new URL("/employee/connect?connected=strava", request.url)
     )
-  } catch (error) {
-    console.error("Error in Strava OAuth callback:", error)
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    const errorStack = error instanceof Error ? error.stack : undefined
+    console.error("Error in Strava OAuth callback:", {
+      message: errorMessage,
+      stack: errorStack
+    })
     return NextResponse.redirect(
       new URL("/employee/connect?error=callback_failed", request.url)
     )
