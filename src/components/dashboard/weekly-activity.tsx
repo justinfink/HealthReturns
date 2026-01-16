@@ -23,12 +23,16 @@ import { formatDistanceToNow } from "date-fns"
 
 interface StravaActivity {
   id: string
+  name: string
+  type: string // Run, Ride, Swim, Walk, Hike, Workout, etc.
+  sportType: string
   date: Date
   distance?: number
   activeMinutes?: number
   calories?: number
   avgHeartRate?: number
   maxHeartRate?: number
+  elevationGain?: number
 }
 
 interface WeeklySummary {
@@ -46,30 +50,28 @@ interface StravaData {
   lastSyncAt: string | null
 }
 
-// Get activity icon based on characteristics
+// Get activity icon based on Strava activity type
 function getActivityIcon(activity: StravaActivity) {
-  // Infer activity type from metrics
-  // Cycling: typically longer distance, lower HR
-  // Running: medium distance, higher HR
-  // Swimming: no distance in km, consistent time
-  // Strength: no distance, short duration
+  const type = activity.type?.toLowerCase() || ""
 
-  if (!activity.distance || activity.distance < 0.5) {
-    // No significant distance - likely strength/yoga
-    return <Dumbbell className="h-4 w-4" />
-  }
-
-  if (activity.distance > 10) {
-    // Long distance - likely cycling
+  // Map Strava activity types to icons
+  if (type.includes("ride") || type.includes("cycling") || type.includes("bike")) {
     return <Bike className="h-4 w-4" />
   }
 
-  if (activity.avgHeartRate && activity.avgHeartRate > 140) {
-    // High heart rate - likely running
-    return <Activity className="h-4 w-4" />
+  if (type.includes("swim")) {
+    return <Waves className="h-4 w-4" />
   }
 
-  // Default to running icon
+  if (type.includes("hike") || type.includes("alpine")) {
+    return <Mountain className="h-4 w-4" />
+  }
+
+  if (type.includes("weight") || type.includes("workout") || type.includes("crossfit") || type.includes("yoga")) {
+    return <Dumbbell className="h-4 w-4" />
+  }
+
+  // Run, Walk, and other cardio activities
   return <Activity className="h-4 w-4" />
 }
 
@@ -83,12 +85,12 @@ function formatDuration(minutes: number): string {
   return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`
 }
 
-// Format distance
-function formatDistance(km: number): string {
-  if (km < 1) {
-    return `${Math.round(km * 1000)}m`
+// Format distance (in miles)
+function formatDistance(miles: number): string {
+  if (miles < 0.1) {
+    return `${Math.round(miles * 5280)}ft`
   }
-  return `${km.toFixed(1)}km`
+  return `${miles.toFixed(1)}mi`
 }
 
 export function WeeklyActivity() {
@@ -290,22 +292,19 @@ export function WeeklyActivity() {
                   {getActivityIcon(activity)}
                 </div>
                 <div>
-                  <div className="flex items-center gap-2">
+                  <p className="text-sm font-medium">{activity.name}</p>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     {activity.activeMinutes && (
-                      <span className="flex items-center gap-1 text-sm font-medium">
-                        <Timer className="h-3 w-3 text-muted-foreground" />
+                      <span className="flex items-center gap-1">
+                        <Timer className="h-3 w-3" />
                         {formatDuration(activity.activeMinutes)}
                       </span>
                     )}
                     {activity.distance && activity.distance > 0 && (
-                      <span className="text-sm text-muted-foreground">
-                        • {formatDistance(activity.distance)}
-                      </span>
+                      <span>• {formatDistance(activity.distance)}</span>
                     )}
+                    <span>• {formatDistanceToNow(activity.date, { addSuffix: true })}</span>
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    {formatDistanceToNow(activity.date, { addSuffix: true })}
-                  </p>
                 </div>
               </div>
 

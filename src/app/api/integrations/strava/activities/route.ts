@@ -38,82 +38,45 @@ export async function GET() {
       })
     }
 
-    // Check if we need to sync (last sync > 1 hour ago or never)
-    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000)
-    const needsSync = !connection.lastSyncAt || connection.lastSyncAt < oneHourAgo
-
-    if (needsSync) {
-      console.log("Syncing Strava data for member:", member.id)
-      const client = getStravaClient()
-      await client.syncHealthData(member.id, 7) // Last 7 days
-    }
-
-    // Fetch activities from database (last 7 days)
+    // Fetch activities directly from Strava API (last 7 days)
+    // This gives us the full activity data including name and type
     const sevenDaysAgo = new Date()
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
 
-    // Get all activity metrics grouped by sourceRecordId (activity)
-    const metrics = await prisma.biometricMetric.findMany({
-      where: {
-        memberId: member.id,
-        source: IntegrationSource.STRAVA,
-        recordedAt: { gte: sevenDaysAgo },
-      },
-      orderBy: { recordedAt: "desc" },
-    })
+    const client = getStravaClient()
+    const stravaActivities = await client.fetchActivities(member.id, sevenDaysAgo, 1, 20)
 
-    // Group metrics by activity (sourceRecordId)
-    const activitiesMap = new Map<string, {
-      id: string
-      date: Date
-      distance?: number
-      activeMinutes?: number
-      calories?: number
-      avgHeartRate?: number
-      maxHeartRate?: number
-    }>()
-
-    for (const metric of metrics) {
-      const activityId = metric.sourceRecordId || metric.id
-
-      if (!activitiesMap.has(activityId)) {
-        activitiesMap.set(activityId, {
-          id: activityId,
-          date: metric.recordedAt,
-        })
-      }
-
-      const activity = activitiesMap.get(activityId)!
-
-      switch (metric.metricType) {
-        case "DISTANCE":
-          activity.distance = Number(metric.value)
-          break
-        case "ACTIVE_MINUTES":
-          activity.activeMinutes = Number(metric.value)
-          break
-        case "CALORIES_BURNED":
-          activity.calories = Number(metric.value)
-          break
-        case "RESTING_HEART_RATE": // Actually avg HR for activities
-          activity.avgHeartRate = Number(metric.value)
-          break
-        case "MAX_HEART_RATE":
-          activity.maxHeartRate = Number(metric.value)
-          break
-      }
+    if (!stravaActivities) {
+      // If fetch fails, return empty but connected state
+      return NextResponse.json({
+        connected: true,
+        activities: [],
+        summary: null,
+        lastSyncAt: connection.lastSyncAt,
+        error: "Could not fetch activities from Strava",
+      })
     }
 
-    const activities = Array.from(activitiesMap.values())
-      .filter(a => a.activeMinutes && a.activeMinutes > 0) // Only include activities with duration
-      .sort((a, b) => b.date.getTime() - a.date.getTime())
-      .slice(0, 10) // Limit to 10 most recent
+    // Transform Strava activities to our format
+    const activities = stravaActivities.map(activity => ({
+      id: activity.id.toString(),
+      name: activity.name,
+      type: activity.type, // Run, Ride, Swim, Walk, Hike, Workout, etc.
+      sportType: activity.sport_type,
+      date: new Date(activity.start_date),
+      distance: activity.distance / 1609.344, // meters to miles
+      activeMinutes: Math.round(activity.moving_time / 60),
+      calories: activity.calories || null,
+      avgHeartRate: activity.average_heartrate || null,
+      maxHeartRate: activity.max_heartrate || null,
+      elevationGain: activity.total_elevation_gain ? activity.total_elevation_gain * 3.28084 : null, // meters to feet
+    }))
 
     // Calculate weekly summary
     const summary = {
       totalActivities: activities.length,
-      totalActiveMinutes: activities.reduce((sum, a) => sum + (a.activeMinutes || 0), 0),
-      totalDistance: activities.reduce((sum, a) => sum + (a.distance || 0), 0),
+      totalActiveMinutes: activities.reduce((sum, a) => sum + a.activeMinutes, 0),
+      totalDistance: activities.reduce((sum, a) => sum + a.distance, 0),
       totalCalories: activities.reduce((sum, a) => sum + (a.calories || 0), 0),
       avgHeartRate: activities.filter(a => a.avgHeartRate).length > 0
         ? Math.round(
@@ -123,11 +86,17 @@ export async function GET() {
         : null,
     }
 
+    // Update last sync time
+    await prisma.integrationConnection.update({
+      where: { id: connection.id },
+      data: { lastSyncAt: new Date() },
+    })
+
     return NextResponse.json({
       connected: true,
       activities,
       summary,
-      lastSyncAt: connection.lastSyncAt,
+      lastSyncAt: new Date(),
     })
   } catch (error) {
     console.error("Error fetching Strava activities:", error)

@@ -287,14 +287,14 @@ export function transformStravaActivityToMetrics(
   const metrics = []
   const recordedAt = new Date(activity.start_date)
 
-  // Distance (convert meters to km)
+  // Distance (convert meters to miles)
   if (activity.distance > 0) {
     metrics.push({
       memberId,
       category: MetricCategory.ACTIVITY,
       metricType: MetricType.DISTANCE,
-      value: activity.distance / 1000,
-      unit: "km",
+      value: activity.distance / 1609.344, // meters to miles
+      unit: "mi",
       source: IntegrationSource.STRAVA,
       sourceRecordId: activity.id.toString(),
       recordedAt,
