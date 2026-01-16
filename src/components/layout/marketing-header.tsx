@@ -1,9 +1,10 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Menu, X, Activity } from "lucide-react"
+import { Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const navigation = [
@@ -21,9 +22,13 @@ export function MarketingHeader() {
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-            <Activity className="h-5 w-5 text-primary-foreground" />
-          </div>
+          <Image
+            src="/logo.svg"
+            alt="HealthReturns"
+            width={36}
+            height={40}
+            className="h-9 w-auto"
+          />
           <span className="text-xl font-bold text-foreground">
             HealthReturns
           </span>

@@ -1,10 +1,10 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import {
-  Activity,
   LayoutDashboard,
   Link2,
   TrendingUp,
@@ -56,9 +56,13 @@ export function DashboardSidebar({ type }: DashboardSidebarProps) {
     <div className="flex h-full w-64 flex-col border-r bg-card">
       {/* Logo */}
       <div className="flex h-16 items-center gap-2 border-b px-6">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-          <Activity className="h-4 w-4 text-primary-foreground" />
-        </div>
+        <Image
+          src="/logo.svg"
+          alt="HealthReturns"
+          width={32}
+          height={35}
+          className="h-8 w-auto"
+        />
         <span className="text-lg font-bold">HealthReturns</span>
         {isDemoMode && (
           <Badge variant="warning" className="ml-auto text-xs">
