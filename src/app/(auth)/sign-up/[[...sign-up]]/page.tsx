@@ -3,6 +3,7 @@ import { SignUp } from "@clerk/nextjs"
 export default function SignUpPage() {
   return (
     <SignUp
+      forceRedirectUrl="/employee"
       appearance={{
         elements: {
           rootBox: "w-full",
