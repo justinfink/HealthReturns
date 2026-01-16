@@ -3,27 +3,88 @@ import { auth, currentUser } from "@clerk/nextjs/server"
 import { getRequestToken } from "@/lib/integrations/garmin/oauth"
 import { prisma } from "@/lib/db/prisma"
 import { cookies } from "next/headers"
+import { ConsentType } from "@prisma/client"
 
 // POST /api/integrations/garmin/auth - Initiate Garmin OAuth flow
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await auth()
+    const { userId, orgId } = await auth()
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    // Get member from database
-    const member = await prisma.member.findFirst({
+    // Get member from database, or auto-enroll if they don't exist
+    let member = await prisma.member.findFirst({
       where: { clerkUserId: userId },
     })
 
     if (!member) {
-      return NextResponse.json({ error: "Member not found" }, { status: 404 })
+      // Auto-enroll the member
+      const user = await currentUser()
+      if (!user) {
+        return NextResponse.json({ error: "User not found" }, { status: 404 })
+      }
+
+      // Get or create organization
+      let organization = await prisma.organization.findFirst({
+        where: orgId ? { clerkOrganizationId: orgId } : { isDemo: true },
+      })
+
+      if (!organization) {
+        organization = await prisma.organization.create({
+          data: {
+            clerkOrganizationId: orgId || `default_${userId}`,
+            name: "My Company",
+            slug: `company-${Date.now()}`,
+            isDemo: !orgId,
+            programConfig: {
+              create: {
+                programName: "Wellness Rewards",
+                programStartDate: new Date(),
+                level0Rebate: 0,
+                level1Rebate: 5,
+                level2Rebate: 15,
+                level3Rebate: 30,
+              },
+            },
+          },
+        })
+      }
+
+      member = await prisma.member.create({
+        data: {
+          clerkUserId: userId,
+          organizationId: organization.id,
+          email: user.emailAddresses[0]?.emailAddress || "",
+          firstName: user.firstName || null,
+          lastName: user.lastName || null,
+          enrolledAt: new Date(),
+        },
+      })
+
+      // Create default consents
+      const requiredConsents = [
+        ConsentType.PROGRAM_PARTICIPATION,
+        ConsentType.DATA_COLLECTION,
+      ]
+
+      for (const consentType of requiredConsents) {
+        await prisma.consentRecord.create({
+          data: {
+            memberId: member.id,
+            consentType,
+            granted: true,
+            grantedAt: new Date(),
+          },
+        })
+      }
     }
 
-    // Build callback URL
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
+    // Build callback URL using the request origin (works for both local and production)
+    const origin = request.headers.get("origin") || request.headers.get("host")
+    const protocol = request.headers.get("x-forwarded-proto") || "https"
+    const appUrl = origin?.startsWith("http") ? origin : `${protocol}://${origin}`
     const callbackUrl = `${appUrl}/api/integrations/garmin/callback`
 
     // Get request token from Garmin
