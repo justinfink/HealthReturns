@@ -2,6 +2,7 @@ import { DashboardHeader } from "@/components/layout/dashboard-header"
 import { LevelProgressCard } from "@/components/dashboard/level-progress-card"
 import { RebateStatusCard } from "@/components/dashboard/rebate-status-card"
 import { MetricCard } from "@/components/dashboard/metric-card"
+import { WeeklyActivity } from "@/components/dashboard/weekly-activity"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -12,7 +13,6 @@ import {
   Scale,
   Activity,
   Zap,
-  ArrowRight,
 } from "lucide-react"
 import Link from "next/link"
 
@@ -105,34 +105,8 @@ export default function EmployeeDashboardPage() {
               />
             </div>
 
-            {/* Activity Chart Placeholder */}
-            <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg">Weekly Activity</CardTitle>
-                  <Button variant="ghost" size="sm" asChild>
-                    <Link href="/employee/progress">
-                      View Details
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent>
-                {/* Chart placeholder - would use Recharts in production */}
-                <div className="flex h-48 items-center justify-center rounded-lg bg-muted">
-                  <div className="text-center">
-                    <Activity className="mx-auto h-10 w-10 text-muted-foreground" />
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      Activity chart will display here
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Connect a data source to see your trends
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Weekly Activity - Strava Integration */}
+            <WeeklyActivity />
 
             {/* Integration Status */}
             <Card>

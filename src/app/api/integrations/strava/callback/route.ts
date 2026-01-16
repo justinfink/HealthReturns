@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { exchangeCodeForToken, storeStravaConnection } from "@/lib/integrations/strava/oauth"
+import { getStravaClient } from "@/lib/integrations/strava/client"
 import { prisma } from "@/lib/db/prisma"
 
 // GET /api/integrations/strava/callback - Handle Strava OAuth callback
@@ -67,6 +68,17 @@ export async function GET(request: NextRequest) {
     console.log("Storing connection for member:", memberId)
     await storeStravaConnection(memberId, tokenResponse)
     console.log("Strava connection stored successfully")
+
+    // Trigger initial sync (limited to avoid rate limits - just last 7 days)
+    console.log("Triggering initial Strava sync...")
+    try {
+      const client = getStravaClient()
+      const syncResult = await client.syncHealthData(memberId, 7)
+      console.log("Initial sync completed:", syncResult)
+    } catch (syncError) {
+      // Don't fail the connection if sync fails - user can retry
+      console.error("Initial sync failed (non-fatal):", syncError)
+    }
 
     // Redirect to connect page with success
     return NextResponse.redirect(
