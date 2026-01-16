@@ -1,4 +1,4 @@
-import { Activity } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
 
 export default function AuthLayout({
@@ -11,8 +11,14 @@ export default function AuthLayout({
       {/* Left side - Branding */}
       <div className="hidden lg:flex lg:w-1/2 lg:flex-col lg:justify-between bg-primary p-12 text-primary-foreground">
         <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/10">
-            <Activity className="h-6 w-6" />
+          <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-white shadow-sm">
+            <Image
+              src="/logo.png"
+              alt="HealthReturns"
+              width={48}
+              height={48}
+              className="h-12 w-auto"
+            />
           </div>
           <span className="text-2xl font-bold">HealthReturns</span>
         </Link>
@@ -71,9 +77,13 @@ export default function AuthLayout({
           {/* Mobile logo */}
           <div className="mb-8 flex justify-center lg:hidden">
             <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-                <Activity className="h-6 w-6 text-primary-foreground" />
-              </div>
+              <Image
+                src="/logo.png"
+                alt="HealthReturns"
+                width={52}
+                height={52}
+                className="h-[52px] w-auto"
+              />
               <span className="text-2xl font-bold">HealthReturns</span>
             </Link>
           </div>

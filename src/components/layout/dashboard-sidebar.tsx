@@ -57,11 +57,11 @@ export function DashboardSidebar({ type }: DashboardSidebarProps) {
       {/* Logo */}
       <div className="flex h-16 items-center gap-2 border-b px-6">
         <Image
-          src="/logo.svg"
+          src="/logo.png"
           alt="HealthReturns"
-          width={32}
-          height={35}
-          className="h-8 w-auto"
+          width={48}
+          height={48}
+          className="h-12 w-auto"
         />
         <span className="text-lg font-bold">HealthReturns</span>
         {isDemoMode && (

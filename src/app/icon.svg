@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 110" fill="#10B981">
-  <rect x="47" y="5" width="6" height="20" rx="2"/>
-  <ellipse cx="62" cy="12" rx="12" ry="8" transform="rotate(30 62 12)"/>
-  <path d="M50 25 C25 25, 10 45, 10 70 C10 95, 25 105, 50 105 L50 25 Z"/>
-  <path d="M50 25 C75 25, 90 45, 90 70 C90 95, 75 105, 50 105 L50 25 Z"/>
-  <ellipse cx="50" cy="28" rx="10" ry="5" fill="white"/>
-  <rect x="8" y="60" width="84" height="10" fill="white"/>
-  <polyline points="12,65 30,65 38,55 50,75 62,55 70,65 88,65" stroke="#10B981" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>

@@ -23,11 +23,11 @@ export function MarketingHeader() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <Image
-            src="/logo.svg"
+            src="/logo.png"
             alt="HealthReturns"
-            width={36}
-            height={40}
-            className="h-9 w-auto"
+            width={52}
+            height={52}
+            className="h-[52px] w-auto"
           />
           <span className="text-xl font-bold text-foreground">
             HealthReturns

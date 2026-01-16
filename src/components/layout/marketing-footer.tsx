@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Activity } from "lucide-react"
+import Image from "next/image"
 
 const footerNavigation = {
   product: [
@@ -32,9 +32,13 @@ export function MarketingFooter() {
           {/* Brand */}
           <div className="space-y-4">
             <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-                <Activity className="h-5 w-5 text-primary-foreground" />
-              </div>
+              <Image
+                src="/logo.png"
+                alt="HealthReturns"
+                width={52}
+                height={52}
+                className="h-[52px] w-auto"
+              />
               <span className="text-xl font-bold text-foreground">
                 HealthReturns
               </span>
