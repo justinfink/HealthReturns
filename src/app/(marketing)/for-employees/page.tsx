@@ -54,7 +54,7 @@ const benefits = [
     icon: Smartphone,
     title: "Easy Tracking",
     description:
-      "Connect devices you already use — Apple Watch, Garmin, smart scales — or enter data manually.",
+      "Connect devices you already use — Garmin, Oura, WHOOP, Fitbit, Apple Watch — or enter data manually.",
   },
 ]
 
@@ -82,7 +82,7 @@ const faqs = [
   {
     question: "What devices work with HealthReturns?",
     answer:
-      "We integrate with Apple Health, Garmin Connect, Renpho smart scales, and Function Health labs. If you don't use any of these, you can enter metrics manually or use our verified partner network.",
+      "We integrate with Garmin Connect, Strava, Oura Ring, WHOOP, Fitbit, Apple Health, Renpho smart scales, and Function Health labs. If you don't use any of these, you can enter metrics manually or use our verified partner network.",
   },
   {
     question: "Can I stop sharing my data?",

@@ -36,11 +36,11 @@ const steps = [
     icon: Link2,
     title: "Connect Your Data",
     description:
-      "Link your health sources like Apple Health, Garmin, or Renpho. Or use manual verification if you prefer.",
+      "Link your health sources like Garmin, Strava, Oura, WHOOP, Fitbit, or Apple Health. Or use manual verification if you prefer.",
     details: [
-      "Apple Health integration",
-      "Garmin Connect sync",
-      "Renpho smart scale",
+      "Garmin, Strava, Oura Ring integration",
+      "WHOOP and Fitbit sync",
+      "Apple Health & Renpho support",
       "Manual verification fallback",
     ],
   },

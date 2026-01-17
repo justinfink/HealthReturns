@@ -233,6 +233,9 @@ enum IntegrationSource {
   APPLE_HEALTH
   RENPHO
   FUNCTION_HEALTH
+  OURA
+  WHOOP
+  FITBIT
   MANUAL_ENTRY
 }
 

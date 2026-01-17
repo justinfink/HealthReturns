@@ -18,6 +18,27 @@ export {
   storeStravaConnection,
 } from "./strava/oauth"
 
+export { OuraClient, getOuraClient, transformOuraSleepToMetrics, transformOuraActivityToMetrics } from "./oura/client"
+export {
+  getAuthorizationUrl as getOuraAuthorizationUrl,
+  exchangeCodeForToken as exchangeOuraCodeForToken,
+  storeOuraConnection,
+} from "./oura/oauth"
+
+export { WhoopClient, getWhoopClient, transformWhoopRecoveryToMetrics, transformWhoopSleepToMetrics, transformWhoopWorkoutToMetrics } from "./whoop/client"
+export {
+  getAuthorizationUrl as getWhoopAuthorizationUrl,
+  exchangeCodeForToken as exchangeWhoopCodeForToken,
+  storeWhoopConnection,
+} from "./whoop/oauth"
+
+export { FitbitClient, getFitbitClient, transformFitbitActivityToMetrics, transformFitbitSleepToMetrics, transformFitbitHeartRateToMetrics } from "./fitbit/client"
+export {
+  getAuthorizationUrl as getFitbitAuthorizationUrl,
+  exchangeCodeForToken as exchangeFitbitCodeForToken,
+  storeFitbitConnection,
+} from "./fitbit/oauth"
+
 export { AppleHealthMockClient } from "./apple-health/mock-client"
 export { RenphoMockClient } from "./renpho/mock-client"
 export { FunctionHealthMockClient } from "./function-health/mock-client"
@@ -46,6 +67,27 @@ export const integrationMetadata: Record<
     name: "Strava",
     description: "Sync running, cycling, and workout data from Strava",
     icon: "strava",
+    isReal: true,
+    requiresOAuth: true,
+  },
+  [IntegrationSource.OURA]: {
+    name: "Oura Ring",
+    description: "Sync sleep, readiness, and activity data from your Oura Ring",
+    icon: "oura",
+    isReal: true,
+    requiresOAuth: true,
+  },
+  [IntegrationSource.WHOOP]: {
+    name: "WHOOP",
+    description: "Sync recovery, strain, sleep, and workout data from WHOOP",
+    icon: "whoop",
+    isReal: true,
+    requiresOAuth: true,
+  },
+  [IntegrationSource.FITBIT]: {
+    name: "Fitbit",
+    description: "Sync activity, sleep, heart rate, and weight data from Fitbit",
+    icon: "fitbit",
     isReal: true,
     requiresOAuth: true,
   },
@@ -97,6 +139,42 @@ export const integrationMetrics: Record<IntegrationSource, string[]> = {
     "average_heart_rate",
     "max_heart_rate",
     "elevation_gain",
+  ],
+  [IntegrationSource.OURA]: [
+    "sleep_score",
+    "sleep_duration",
+    "steps",
+    "active_calories",
+    "distance",
+    "active_minutes",
+    "heart_rate_variability",
+    "readiness_score",
+  ],
+  [IntegrationSource.WHOOP]: [
+    "recovery_score",
+    "resting_heart_rate",
+    "heart_rate_variability",
+    "sleep_duration",
+    "sleep_performance",
+    "deep_sleep",
+    "rem_sleep",
+    "strain",
+    "calories_burned",
+  ],
+  [IntegrationSource.FITBIT]: [
+    "steps",
+    "distance",
+    "active_minutes",
+    "calories_burned",
+    "floors_climbed",
+    "resting_heart_rate",
+    "sleep_duration",
+    "sleep_efficiency",
+    "deep_sleep",
+    "rem_sleep",
+    "weight",
+    "bmi",
+    "body_fat_percentage",
   ],
   [IntegrationSource.APPLE_HEALTH]: [
     "steps",

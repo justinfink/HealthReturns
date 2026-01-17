@@ -38,6 +38,27 @@ const baseIntegrations: Omit<Integration, "status" | "lastSync">[] = [
     source: "strava",
   },
   {
+    name: "Oura Ring",
+    icon: "💍",
+    description: "Sync sleep, readiness, and activity data from your Oura Ring.",
+    isMock: false,
+    source: "oura",
+  },
+  {
+    name: "WHOOP",
+    icon: "💪",
+    description: "Sync recovery, strain, sleep, and workout data from WHOOP.",
+    isMock: false,
+    source: "whoop",
+  },
+  {
+    name: "Fitbit",
+    icon: "📊",
+    description: "Sync activity, sleep, heart rate, and weight data from Fitbit.",
+    isMock: false,
+    source: "fitbit",
+  },
+  {
     name: "Apple Health",
     icon: "🍎",
     description: "Import health data from your iPhone and Apple Watch.",
@@ -85,6 +106,40 @@ const metricsBySource = [
     ],
   },
   {
+    source: "Oura Ring",
+    metrics: [
+      "Sleep Score",
+      "Sleep Duration",
+      "Steps",
+      "Active Calories",
+      "Heart Rate Variability",
+      "Readiness Score",
+    ],
+  },
+  {
+    source: "WHOOP",
+    metrics: [
+      "Recovery Score",
+      "Resting Heart Rate",
+      "Heart Rate Variability",
+      "Sleep Performance",
+      "Strain Score",
+      "Deep Sleep",
+    ],
+  },
+  {
+    source: "Fitbit",
+    metrics: [
+      "Steps",
+      "Distance",
+      "Active Minutes",
+      "Resting Heart Rate",
+      "Sleep Duration",
+      "Weight",
+      "Body Fat %",
+    ],
+  },
+  {
     source: "Apple Health",
     metrics: [
       "Steps",
@@ -111,6 +166,9 @@ const metricsBySource = [
   },
 ]
 
+// Real OAuth integrations (non-mock)
+const realIntegrations = ["strava", "garmin", "oura", "whoop", "fitbit"]
+
 export default function ConnectPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -129,27 +187,30 @@ export default function ConnectPage() {
         const statuses = await Promise.all([
           fetch("/api/integrations/strava/auth").then((r) => r.ok ? r.json() : null).catch(() => null),
           fetch("/api/integrations/garmin/auth").then((r) => r.ok ? r.json() : null).catch(() => null),
+          fetch("/api/integrations/oura/auth").then((r) => r.ok ? r.json() : null).catch(() => null),
+          fetch("/api/integrations/whoop/auth").then((r) => r.ok ? r.json() : null).catch(() => null),
+          fetch("/api/integrations/fitbit/auth").then((r) => r.ok ? r.json() : null).catch(() => null),
         ])
 
-        const [stravaStatus, garminStatus] = statuses
+        const [stravaStatus, garminStatus, ouraStatus, whoopStatus, fitbitStatus] = statuses
 
         setIntegrations((prev) =>
           prev.map((integration) => {
-            if (integration.source === "strava" && stravaStatus) {
-              return {
-                ...integration,
-                status: stravaStatus.connected ? "CONNECTED" : "DISCONNECTED",
-                lastSync: stravaStatus.lastSyncAt
-                  ? new Date(stravaStatus.lastSyncAt).toLocaleDateString()
-                  : undefined,
-              }
+            const statusMap: Record<string, typeof stravaStatus> = {
+              strava: stravaStatus,
+              garmin: garminStatus,
+              oura: ouraStatus,
+              whoop: whoopStatus,
+              fitbit: fitbitStatus,
             }
-            if (integration.source === "garmin" && garminStatus) {
+
+            const status = statusMap[integration.source]
+            if (status) {
               return {
                 ...integration,
-                status: garminStatus.connected ? "CONNECTED" : "DISCONNECTED",
-                lastSync: garminStatus.lastSyncAt
-                  ? new Date(garminStatus.lastSyncAt).toLocaleDateString()
+                status: status.connected ? "CONNECTED" : "DISCONNECTED",
+                lastSync: status.lastSyncAt
+                  ? new Date(status.lastSyncAt).toLocaleDateString()
                   : undefined,
               }
             }
@@ -206,6 +267,9 @@ export default function ConnectPage() {
       const errorMessages: Record<string, string> = {
         denied: "You denied access to the integration.",
         strava_denied: "You denied access to Strava.",
+        oura_denied: "You denied access to Oura.",
+        whoop_denied: "You denied access to WHOOP.",
+        fitbit_denied: "You denied access to Fitbit.",
         session_expired: "Your session expired. Please try again.",
         callback_failed: "Failed to complete connection. Please try again.",
         missing_code: "Missing authorization code.",
@@ -222,10 +286,11 @@ export default function ConnectPage() {
   }, [connected, error, router, toast])
 
   const handleConnect = async (source: string) => {
-    if (source === "strava") {
-      setConnecting("strava")
+    // Check if this is a real OAuth integration
+    if (realIntegrations.includes(source)) {
+      setConnecting(source)
       try {
-        const response = await fetch("/api/integrations/strava/auth", {
+        const response = await fetch(`/api/integrations/${source}/auth`, {
           method: "POST",
         })
         const data = await response.json()
@@ -235,40 +300,14 @@ export default function ConnectPage() {
         } else {
           toast({
             title: "Connection failed",
-            description: data.error || "Failed to initiate Strava connection",
+            description: data.error || `Failed to initiate ${source} connection`,
             variant: "destructive",
           })
         }
       } catch (err) {
         toast({
           title: "Connection failed",
-          description: "Failed to connect to Strava. Please try again.",
-          variant: "destructive",
-        })
-      } finally {
-        setConnecting(null)
-      }
-    } else if (source === "garmin") {
-      setConnecting("garmin")
-      try {
-        const response = await fetch("/api/integrations/garmin/auth", {
-          method: "POST",
-        })
-        const data = await response.json()
-
-        if (data.authorizationUrl) {
-          window.location.href = data.authorizationUrl
-        } else {
-          toast({
-            title: "Connection failed",
-            description: data.error || "Failed to initiate Garmin connection",
-            variant: "destructive",
-          })
-        }
-      } catch (err) {
-        toast({
-          title: "Connection failed",
-          description: "Failed to connect to Garmin. Please try again.",
+          description: `Failed to connect to ${source}. Please try again.`,
           variant: "destructive",
         })
       } finally {
@@ -284,7 +323,7 @@ export default function ConnectPage() {
   }
 
   const handleDisconnect = async (source: string) => {
-    if (source === "strava" || source === "garmin") {
+    if (realIntegrations.includes(source)) {
       try {
         await fetch(`/api/integrations/${source}/auth`, { method: "DELETE" })
         toast({
@@ -354,7 +393,7 @@ export default function ConnectPage() {
                 <CardTitle className="text-lg">What Gets Synced</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid gap-6 sm:grid-cols-2">
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {metricsBySource.map((source) => (
                     <div key={source.source}>
                       <h4 className="font-medium">{source.source}</h4>

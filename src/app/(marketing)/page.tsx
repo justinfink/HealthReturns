@@ -44,7 +44,7 @@ const features = [
     icon: Zap,
     title: "Easy Integration",
     description:
-      "Connect Apple Health, Garmin, Renpho, and more to automatically track metrics.",
+      "Connect Garmin, Strava, Oura, WHOOP, Fitbit, and more to automatically track metrics.",
   },
   {
     icon: BarChart3,
@@ -79,8 +79,12 @@ const levels = [
 ]
 
 const integrations = [
-  { name: "Apple Health", logo: "🍎" },
   { name: "Garmin", logo: "⌚" },
+  { name: "Strava", logo: "🏃" },
+  { name: "Oura Ring", logo: "💍" },
+  { name: "WHOOP", logo: "💪" },
+  { name: "Fitbit", logo: "📊" },
+  { name: "Apple Health", logo: "🍎" },
   { name: "Renpho", logo: "⚖️" },
   { name: "Function Health", logo: "🧬" },
 ]

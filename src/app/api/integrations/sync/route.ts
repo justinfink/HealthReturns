@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@clerk/nextjs/server"
 import { prisma } from "@/lib/db/prisma"
 import { getGarminClient } from "@/lib/integrations/garmin/client"
+import { getStravaClient } from "@/lib/integrations/strava/client"
+import { getOuraClient } from "@/lib/integrations/oura/client"
+import { getWhoopClient } from "@/lib/integrations/whoop/client"
+import { getFitbitClient } from "@/lib/integrations/fitbit/client"
 import { AppleHealthMockClient } from "@/lib/integrations/apple-health/mock-client"
 import { RenphoMockClient } from "@/lib/integrations/renpho/mock-client"
 import { FunctionHealthMockClient } from "@/lib/integrations/function-health/mock-client"
@@ -37,6 +41,50 @@ export async function POST(request: NextRequest) {
           case IntegrationSource.GARMIN: {
             const garminClient = getGarminClient()
             const syncResult = await garminClient.syncHealthData(member.id)
+            results[connection.source] = {
+              success: syncResult.success,
+              metricsUpdated: syncResult.metricsUpdated,
+              error: syncResult.errors[0],
+            }
+            break
+          }
+
+          case IntegrationSource.STRAVA: {
+            const stravaClient = getStravaClient()
+            const syncResult = await stravaClient.syncHealthData(member.id)
+            results[connection.source] = {
+              success: syncResult.success,
+              metricsUpdated: syncResult.metricsUpdated,
+              error: syncResult.errors[0],
+            }
+            break
+          }
+
+          case IntegrationSource.OURA: {
+            const ouraClient = getOuraClient()
+            const syncResult = await ouraClient.syncHealthData(member.id)
+            results[connection.source] = {
+              success: syncResult.success,
+              metricsUpdated: syncResult.metricsUpdated,
+              error: syncResult.errors[0],
+            }
+            break
+          }
+
+          case IntegrationSource.WHOOP: {
+            const whoopClient = getWhoopClient()
+            const syncResult = await whoopClient.syncHealthData(member.id)
+            results[connection.source] = {
+              success: syncResult.success,
+              metricsUpdated: syncResult.metricsUpdated,
+              error: syncResult.errors[0],
+            }
+            break
+          }
+
+          case IntegrationSource.FITBIT: {
+            const fitbitClient = getFitbitClient()
+            const syncResult = await fitbitClient.syncHealthData(member.id)
             results[connection.source] = {
               success: syncResult.success,
               metricsUpdated: syncResult.metricsUpdated,

@@ -18,9 +18,12 @@ const footerNavigation = {
     { name: "HIPAA Notice", href: "/hipaa" },
   ],
   integrations: [
-    { name: "Apple Health", href: "#" },
     { name: "Garmin", href: "#" },
-    { name: "Renpho", href: "#" },
+    { name: "Strava", href: "#" },
+    { name: "Oura Ring", href: "#" },
+    { name: "WHOOP", href: "#" },
+    { name: "Fitbit", href: "#" },
+    { name: "Apple Health", href: "#" },
   ],
 }
 
