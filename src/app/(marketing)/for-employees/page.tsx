@@ -54,7 +54,7 @@ const benefits = [
     icon: Smartphone,
     title: "Easy Tracking",
     description:
-      "Connect devices you already use — Garmin, Oura, WHOOP, Fitbit, Apple Watch — or enter data manually.",
+      "Connect devices you already use (Garmin, Oura, WHOOP, Fitbit, Apple Watch) or enter data manually.",
   },
 ]
 
@@ -163,7 +163,7 @@ export default function ForEmployeesPage() {
               Why Join HealthReturns?
             </h2>
             <p className="mt-4 text-muted-foreground">
-              A wellness program that actually rewards you — without invading your
+              A wellness program that actually rewards you without invading your
               privacy.
             </p>
           </div>
@@ -327,7 +327,7 @@ export default function ForEmployeesPage() {
               Ready to earn rewards for your health?
             </h2>
             <p className="mt-4 text-muted-foreground">
-              Join HealthReturns today and start your journey to better health —
+              Join HealthReturns today and start your journey to better health
               and better savings.
             </p>
             <div className="mt-10 flex justify-center gap-4">

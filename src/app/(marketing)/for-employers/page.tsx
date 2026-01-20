@@ -167,8 +167,8 @@ export default function ForEmployersPage() {
               </h2>
               <p className="mt-4 text-muted-foreground">
                 HealthReturns is structured as a Health-Contingent Wellness Program
-                that meets all ACA and HIPAA requirements. No need for legal review —
-                compliance is built into the platform.
+                that meets all ACA and HIPAA requirements. Compliance is built into
+                the platform.
               </p>
               <ul className="mt-8 space-y-4">
                 {complianceFeatures.map((feature) => (

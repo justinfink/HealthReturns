@@ -274,7 +274,7 @@ export default function HomePage() {
               </h3>
               <p className="mt-4 text-muted-foreground">
                 HealthReturns helps self-insured employers deliver wellness
-                incentives that actually work — without compliance risk.
+                incentives that actually work, without compliance risk.
               </p>
               <ul className="mt-6 space-y-3">
                 <li className="flex items-start gap-2 text-sm">
@@ -287,7 +287,7 @@ export default function HomePage() {
                 </li>
                 <li className="flex items-start gap-2 text-sm">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  Aggregate analytics only — no individual health data access
+                  Aggregate analytics only (no individual health data access)
                 </li>
                 <li className="flex items-start gap-2 text-sm">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
@@ -310,7 +310,7 @@ export default function HomePage() {
               </h3>
               <p className="mt-4 text-muted-foreground">
                 Take control of your wellness journey and earn real financial
-                benefits — while keeping your health data private.
+                benefits while keeping your health data private.
               </p>
               <ul className="mt-6 space-y-3">
                 <li className="flex items-start gap-2 text-sm">
@@ -319,7 +319,7 @@ export default function HomePage() {
                 </li>
                 <li className="flex items-start gap-2 text-sm">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                  Voluntary participation — no penalties
+                  Voluntary participation, never penalized
                 </li>
                 <li className="flex items-start gap-2 text-sm">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
