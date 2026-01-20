@@ -98,12 +98,10 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-6xl">
-              HealthReturns
+              Get paid for investing in your{" "}
+              <span className="text-primary">health</span>.
             </h1>
-            <p className="mt-6 text-2xl font-semibold text-foreground">
-              Get paid for investing in your health.
-            </p>
-            <p className="mt-4 text-lg leading-8 text-muted-foreground">
+            <p className="mt-6 text-lg leading-8 text-muted-foreground">
               HealthReturns rewards measurable progress in the health signals that matter, so taking care of yourself pays off now.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
@@ -125,7 +123,7 @@ export default function HomePage() {
       <section className="border-y bg-muted/30 py-16">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+            <h2 className="text-2xl font-medium italic text-foreground">
               A better way to value health
             </h2>
             <p className="mt-4 text-lg text-muted-foreground">
