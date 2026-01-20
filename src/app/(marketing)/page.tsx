@@ -97,17 +97,14 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent" />
         <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <Badge variant="secondary" className="mb-6">
-              ACA-Compliant Wellness Incentives
-            </Badge>
             <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-6xl">
-              Health is an{" "}
-              <span className="text-primary">asset</span>
+              HealthReturns
             </h1>
-            <p className="mt-6 text-lg leading-8 text-muted-foreground">
-              Get rewarded for improving — or sustaining — your health.
-              HealthReturns helps employers deliver ACA-compliant rebates tied to
-              measurable health engagement.
+            <p className="mt-6 text-2xl font-semibold text-foreground">
+              Get paid for investing in your health.
+            </p>
+            <p className="mt-4 text-lg leading-8 text-muted-foreground">
+              HealthReturns rewards measurable progress in the health signals that matter, so taking care of yourself pays off now.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Button size="xl" asChild>
@@ -124,15 +121,16 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Core Thesis Section */}
+      {/* Secondary Section */}
       <section className="border-y bg-muted/30 py-16">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <blockquote className="text-2xl font-medium italic text-foreground">
-              "When people invest in their health — by improving or sustaining good
-              health — they should see returns."
-            </blockquote>
-            <p className="mt-4 text-muted-foreground">The HealthReturns Philosophy</p>
+            <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+              A better way to value health
+            </h2>
+            <p className="mt-4 text-lg text-muted-foreground">
+              Too often, good health goes unnoticed until something breaks. HealthReturns recognizes meaningful improvement and sustained good health, helping prevention show up as something people can see, earn, and trust.
+            </p>
           </div>
         </div>
       </section>
