@@ -22,46 +22,45 @@ const steps = [
   {
     step: 1,
     icon: UserPlus,
-    title: "Enroll & Consent",
+    title: "Sign up",
     description:
-      "Join your employer's wellness program with clear, transparent consent. Understand exactly what's tracked and what's not shared.",
+      "If your employer offers HealthReturns, you can enroll in a few minutes. You'll see exactly what data is used and what isn't before you agree to anything.",
     details: [
-      "Voluntary participation",
-      "Clear data transparency",
-      "Explicit employer visibility limits",
+      "Completely voluntary",
+      "No penalties for skipping",
+      "Clear explanation of what's shared",
     ],
   },
   {
     step: 2,
     icon: Link2,
-    title: "Connect Your Data",
+    title: "Connect a data source",
     description:
-      "Link your health sources like Garmin, Strava, Oura, WHOOP, Fitbit, or Apple Health. Or use manual verification if you prefer.",
+      "Link a device you already use, like a Garmin, Oura, WHOOP, or Fitbit. If you don't have one, you can enter data manually.",
     details: [
-      "Garmin, Strava, Oura Ring integration",
-      "WHOOP and Fitbit sync",
-      "Apple Health & Renpho support",
-      "Manual verification fallback",
+      "Works with most fitness devices",
+      "Apple Health supported",
+      "Manual entry always available",
     ],
   },
   {
     step: 3,
     icon: LineChart,
-    title: "Establish Baseline",
+    title: "Capture your baseline",
     description:
-      "We capture a one-time baseline snapshot of your health metrics. No penalties for your starting status.",
+      "Your first month establishes where you're starting from. There's no judgment here; this is just the reference point for measuring progress.",
     details: [
       "30-day baseline period",
-      "No judgment on starting point",
-      "Fair for all health levels",
+      "Your starting point is private",
+      "No penalties for where you begin",
     ],
   },
   {
     step: 4,
     icon: Award,
-    title: "Earn Your Level",
+    title: "Make progress, earn rebates",
     description:
-      "Progress through levels by improving your metrics or maintaining excellent health. Each level unlocks higher rebates.",
+      "Improve from your baseline, or maintain already-healthy metrics. Either path earns you a higher rebate on your health coverage.",
     details: [
       "Level 1: Participation (~5%)",
       "Level 2: Improvement (~15%)",
@@ -71,13 +70,13 @@ const steps = [
   {
     step: 5,
     icon: RefreshCcw,
-    title: "Quarterly Evaluation",
+    title: "Check in quarterly",
     description:
-      "Your level is evaluated quarterly. Clear next actions help you understand what's needed to advance.",
+      "Every 90 days, your level is recalculated. You'll always know where you stand and what it would take to move up.",
     details: [
-      "90-day evaluation windows",
-      "No surprise downgrades mid-year",
-      "Always know your next steps",
+      "Evaluated every 90 days",
+      "No surprise changes",
+      "Clear next steps",
     ],
   },
 ]
@@ -112,15 +111,11 @@ export default function HowItWorksPage() {
       <section className="border-b bg-muted/30 py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <Badge variant="secondary" className="mb-4">
-              Simple & Transparent
-            </Badge>
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-              How HealthReturns Works
+              How it works
             </h1>
             <p className="mt-6 text-lg text-muted-foreground">
-              A clear, step-by-step path from enrollment to earning rebates.
-              No hidden requirements. No surprises.
+              Five steps from signup to earning rebates. Nothing hidden.
             </p>
           </div>
         </div>
@@ -177,11 +172,10 @@ export default function HowItWorksPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight">
-              Metrics We Track
+              What we measure
             </h2>
             <p className="mt-4 text-muted-foreground">
-              A comprehensive view of your health, with full control over what
-              you share.
+              You choose what to share. More data means more ways to show progress.
             </p>
           </div>
 
@@ -215,11 +209,10 @@ export default function HowItWorksPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight">
-              Level Progression
+              The levels
             </h2>
             <p className="mt-4 text-muted-foreground">
-              Every level is achievable through either improvement OR maintenance.
-              Fair for all starting points.
+              You can earn any level through improvement or by maintaining already-healthy metrics.
             </p>
           </div>
 
@@ -377,9 +370,9 @@ export default function HowItWorksPage() {
       <section className="border-t bg-muted/30 py-16">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-2xl font-bold">Ready to get started?</h2>
+            <h2 className="text-2xl font-bold">Questions?</h2>
             <p className="mt-2 text-muted-foreground">
-              Join HealthReturns and start earning rewards for your health journey.
+              If your employer offers HealthReturns, you can sign up now. Otherwise, check out the compliance details.
             </p>
             <div className="mt-8 flex justify-center gap-4">
               <Button size="lg" asChild>

@@ -18,39 +18,39 @@ import {
 const features = [
   {
     icon: TrendingUp,
-    title: "Reward Improvement",
+    title: "Improvement is rewarded",
     description:
-      "Earn rebates by demonstrating measurable health improvements over time.",
-  },
-  {
-    icon: Shield,
-    title: "ACA Compliant",
-    description:
-      "Built from the ground up to meet ACA wellness program requirements.",
+      "Getting healthier earns you money back, even if you're starting from scratch.",
   },
   {
     icon: Heart,
-    title: "Maintain Excellence",
+    title: "Staying healthy counts too",
     description:
-      "Already healthy? Earn rewards for sustaining your excellent health metrics.",
+      "Already in good shape? You can earn the same rebates by maintaining it.",
   },
   {
     icon: Lock,
-    title: "Privacy First",
+    title: "Your data stays private",
     description:
-      "Your employer never sees individual health data. Only you control your information.",
+      "Your employer sees participation, not your numbers. That's the whole point.",
+  },
+  {
+    icon: Shield,
+    title: "Compliance is built in",
+    description:
+      "HealthReturns meets ACA requirements. No penalties, only rewards.",
   },
   {
     icon: Zap,
-    title: "Easy Integration",
+    title: "Use devices you own",
     description:
-      "Connect Garmin, Strava, Oura, WHOOP, Fitbit, and more to automatically track metrics.",
+      "Connect a Garmin, Oura, WHOOP, Fitbit, or enter data manually.",
   },
   {
     icon: BarChart3,
-    title: "Clear Progress",
+    title: "Always know where you stand",
     description:
-      "See exactly where you stand and what you need to reach the next level.",
+      "Your dashboard shows your level and what it takes to reach the next one.",
   },
 ]
 
@@ -138,11 +138,10 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Earn Rewards at Every Level
+              Earn more as you progress
             </h2>
             <p className="mt-4 text-lg text-muted-foreground">
-              No penalties. Only rewards. Everyone starts neutral and earns through
-              engagement.
+              There are no penalties. Everyone starts at zero and earns their way up.
             </p>
           </div>
 
@@ -204,10 +203,10 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Built for Everyone
+              Fair for everyone
             </h2>
             <p className="mt-4 text-lg text-muted-foreground">
-              Fair regardless of your starting point. Clear paths to rewards.
+              It doesn't matter where you start. What matters is that you're moving forward.
             </p>
           </div>
 
@@ -234,10 +233,10 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Connect Your Health Sources
+              Works with what you have
             </h2>
             <p className="mt-4 text-lg text-muted-foreground">
-              Seamlessly integrate with the devices and apps you already use.
+              Connect devices you already own, or enter data manually.
             </p>
           </div>
 
@@ -343,11 +342,10 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Ready to invest in your health?
+              Ready to get started?
             </h2>
             <p className="mt-4 text-lg text-muted-foreground">
-              Join HealthReturns today and start earning rewards for your wellness
-              journey.
+              If your employer offers HealthReturns, you can sign up now.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Button size="xl" asChild>

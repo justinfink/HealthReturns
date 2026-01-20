@@ -21,40 +21,40 @@ export const metadata = {
 
 const benefits = [
   {
-    icon: DollarSign,
-    title: "Real Financial Rewards",
-    description:
-      "Earn up to 30% in premium rebates by improving or maintaining your health metrics.",
-  },
-  {
     icon: Scale,
-    title: "Fair For Everyone",
+    title: "Start where you are",
     description:
-      "Whether you're starting your health journey or already at peak fitness, there's a path to rewards.",
-  },
-  {
-    icon: Lock,
-    title: "Your Privacy, Protected",
-    description:
-      "Your employer never sees your health data. Only you control your information.",
-  },
-  {
-    icon: Target,
-    title: "Clear Goals",
-    description:
-      "Always know exactly what you need to do to reach the next level and earn higher rebates.",
+      "Whether you're just getting started or already in great shape, there's a path forward that works for you.",
   },
   {
     icon: Heart,
-    title: "No Penalties",
+    title: "Improvement counts",
     description:
-      "This isn't about punishment. Everyone starts neutral and earns rewards through engagement.",
+      "Small, real progress matters here. You don't need to be perfect; you just need to be moving in the right direction.",
+  },
+  {
+    icon: Lock,
+    title: "Your data stays yours",
+    description:
+      "Your employer sees that you're participating, not what your numbers are. That's by design.",
+  },
+  {
+    icon: Target,
+    title: "Know where you stand",
+    description:
+      "No guessing. You'll always see exactly what's needed to reach the next level.",
+  },
+  {
+    icon: DollarSign,
+    title: "Real money back",
+    description:
+      "This isn't points or gift cards. It's a reduction in what you pay for health coverage.",
   },
   {
     icon: Smartphone,
-    title: "Easy Tracking",
+    title: "Use what you have",
     description:
-      "Connect devices you already use (Garmin, Oura, WHOOP, Fitbit, Apple Watch) or enter data manually.",
+      "Connect a device you already own, or enter data manually. Either works.",
   },
 ]
 
@@ -129,16 +129,13 @@ export default function ForEmployeesPage() {
       <section className="border-b bg-muted/30 py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <Badge variant="secondary" className="mb-4">
-              <Heart className="mr-1 h-3 w-3" />
-              For Employees
-            </Badge>
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-              Your Health. Your Rewards.
+              Taking care of yourself should pay off
             </h1>
             <p className="mt-6 text-lg text-muted-foreground">
-              Earn real financial rewards for taking care of your health. Fair
-              regardless of where you start. Your employer never sees your data.
+              HealthReturns is a way to earn real money back on your health coverage
+              by making progress on the health signals that matter to you. Your
+              employer sees that you're engaged, not your personal data.
             </p>
             <div className="mt-10 flex justify-center gap-4">
               <Button size="lg" asChild>
@@ -160,11 +157,10 @@ export default function ForEmployeesPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight">
-              Why Join HealthReturns?
+              How it works for you
             </h2>
             <p className="mt-4 text-muted-foreground">
-              A wellness program that actually rewards you without invading your
-              privacy.
+              No tricks, no fine print. Here's what to expect.
             </p>
           </div>
 
@@ -193,10 +189,10 @@ export default function ForEmployeesPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight">
-              Earn More at Every Level
+              What you can earn
             </h2>
             <p className="mt-4 text-muted-foreground">
-              Start anywhere. Grow from there. Everyone has a path to rewards.
+              Progress unlocks higher rebates. You move at your own pace.
             </p>
           </div>
 
@@ -239,11 +235,10 @@ export default function ForEmployeesPage() {
                 <Lock className="h-8 w-8 text-primary" />
               </div>
               <h2 className="mt-6 text-3xl font-bold tracking-tight">
-                Your Privacy is Non-Negotiable
+                What your employer actually sees
               </h2>
               <p className="mt-4 text-lg text-muted-foreground">
-                We built HealthReturns with privacy as the foundation, not an
-                afterthought.
+                This is the full list. There's nothing hidden.
               </p>
             </div>
 
@@ -297,10 +292,10 @@ export default function ForEmployeesPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight">
-              Frequently Asked Questions
+              Common questions
             </h2>
             <p className="mt-4 text-muted-foreground">
-              Everything you need to know about joining HealthReturns.
+              If something's unclear, it's probably answered here.
             </p>
           </div>
 
@@ -324,11 +319,10 @@ export default function ForEmployeesPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight">
-              Ready to earn rewards for your health?
+              Ready to get started?
             </h2>
             <p className="mt-4 text-muted-foreground">
-              Join HealthReturns today and start your journey to better health
-              and better savings.
+              If your employer offers HealthReturns, you can sign up now.
             </p>
             <div className="mt-10 flex justify-center gap-4">
               <Button size="lg" asChild>

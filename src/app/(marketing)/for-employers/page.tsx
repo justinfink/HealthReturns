@@ -22,39 +22,39 @@ export const metadata = {
 const benefits = [
   {
     icon: TrendingDown,
-    title: "Reduce Long-Term Claims",
+    title: "Healthier employees cost less",
     description:
-      "Biomarker-driven incentives encourage genuine health improvements that translate to lower healthcare costs over time.",
+      "When people improve their health, claims go down. HealthReturns creates a reason to make that happen.",
   },
   {
     icon: Users,
-    title: "High Participation Rates",
+    title: "People actually participate",
     description:
-      "Fair, transparent rewards that work for all health levels drive engagement across your entire workforce.",
+      "Because the program is fair to all starting points, participation rates are high. Nobody feels left out.",
   },
   {
     icon: Shield,
-    title: "Zero Compliance Risk",
+    title: "Compliance is handled",
     description:
-      "Built from the ground up to meet ACA and HIPAA requirements. No penalties, only rebates.",
+      "HealthReturns is structured as an ACA-compliant health-contingent program. No penalties, only rebates.",
   },
   {
     icon: BarChart3,
-    title: "Aggregate Analytics",
+    title: "See the big picture",
     description:
-      "See participation rates and level distribution without accessing individual health data.",
+      "You get aggregate data: participation rates, level distribution, trends. Not individual health records.",
   },
   {
     icon: Lock,
-    title: "Privacy Protected",
+    title: "Privacy by design",
     description:
-      "Employers never see individual biometric data. Only aggregate, anonymized insights.",
+      "You never see an employee's weight, blood pressure, or any personal metric. That's intentional.",
   },
   {
     icon: FileCheck,
-    title: "Easy Administration",
+    title: "Low admin burden",
     description:
-      "Configure your program once. We handle enrollment, tracking, and rebate calculations.",
+      "Set up once. We handle enrollment, tracking, level calculations, and rebate reporting.",
   },
 ]
 
@@ -94,16 +94,13 @@ export default function ForEmployersPage() {
       <section className="border-b bg-muted/30 py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <Badge variant="secondary" className="mb-4">
-              <Users className="mr-1 h-3 w-3" />
-              For Employers
-            </Badge>
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-              Wellness That Actually Works
+              A reason for employees to invest in their health
             </h1>
             <p className="mt-6 text-lg text-muted-foreground">
-              Reduce healthcare costs with biomarker-driven incentives. ACA-compliant
-              by design. High engagement through fair, transparent rewards.
+              Most wellness programs are ignored or gamed. HealthReturns ties rebates to
+              real, measurable health signals, so employees have a genuine incentive to
+              improve, and you see the results in lower long-term claims.
             </p>
             <div className="mt-10 flex justify-center gap-4">
               <Button size="lg" asChild>
@@ -125,11 +122,10 @@ export default function ForEmployersPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight">
-              Why Employers Choose HealthReturns
+              What's different about this
             </h2>
             <p className="mt-4 text-muted-foreground">
-              A wellness program that delivers measurable results without
-              compliance headaches.
+              HealthReturns is built around one idea: reward real progress.
             </p>
           </div>
 
@@ -211,16 +207,11 @@ export default function ForEmployersPage() {
       <section className="py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <Badge variant="outline" className="mb-4">
-              <BarChart3 className="mr-1 h-3 w-3" />
-              Aggregate Analytics
-            </Badge>
             <h2 className="text-3xl font-bold tracking-tight">
-              Insights Without Individual Data
+              What you see (and don't see)
             </h2>
             <p className="mt-4 text-muted-foreground">
-              See how your wellness program is performing without accessing
-              employee health information.
+              You get program-level insights. Individual health data stays with the individual.
             </p>
           </div>
 
@@ -260,10 +251,10 @@ export default function ForEmployersPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight">
-              Simple, Transparent Pricing
+              Pricing
             </h2>
             <p className="mt-4 text-muted-foreground">
-              No hidden fees. No long-term contracts. Pay per enrolled employee.
+              Per-employee pricing. No long-term contracts. No hidden fees.
             </p>
             <div className="mt-8">
               <Button size="lg" asChild>
@@ -282,11 +273,10 @@ export default function ForEmployersPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight">
-              Ready to transform your wellness program?
+              See if it's a fit
             </h2>
             <p className="mt-4 text-muted-foreground">
-              Join forward-thinking employers who are investing in employee health
-              and seeing real returns.
+              We'll walk you through how HealthReturns works for self-insured employers.
             </p>
             <div className="mt-10 flex justify-center gap-4">
               <Button size="lg" asChild>
